@@ -1,0 +1,27 @@
+<header>my web page</header>
+
+<body>
+    enter name below <br>
+    <input id="input1">
+    <br>
+    <button onclick=action1()>action button</button>
+    <br>
+    <textarea id="result1">
+        owo
+    </textarea>
+
+    <script lang="js">
+        console.log("start of script")
+        var input1Handle = document.getElementById("input1")
+        var result1Handle = document.getElementById("result1")
+
+        function action1() {
+            var string = "Hola " + input1Handle.value + ", que tal"
+
+            result1Handle.value = string
+        }
+        console.log("end of script")
+    </script>
+
+
+</body>
