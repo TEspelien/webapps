@@ -6,6 +6,7 @@
 package com.mycompany.chat_te;
 
 import java.util.ArrayList;
+import spark.Request;
 import static spark.Spark.*;
 
 /**
@@ -19,39 +20,49 @@ public class ChatServer {
 
         get("/hello", (req, res) -> "hello world");
         get("/factorial", (req, res) -> factorial(req));
+        get("/login", (req, res) -> login(req));
+        get("/retrieve", (req, res) -> retrieveNewMessages(req));
+        //get("/send", (req, res) -> sendMessage());
     }
 
-    public ArrayList<String> messages = new ArrayList<String>();
+    public static String login(spark.Request req) {
+        Context ctx = getContext(req);
+        ctx.initials = req.queryParams("initials");
+        return (ctx.initials != null ? "Success!" : "Unregistered login");
+    }
+
+    public static ArrayList<String> messages = new ArrayList<String>();
 
     public void postMessageFromRequest(spark.Request req) {
         messages.add(req.body());
     }
 
-    public String retrieveAllMessages() {
-        String allMessages = "";
-        for (String s : messages) {
-            allMessages += "<br>\n" + s;
+    public static String retrieveNewMessages(spark.Request req) {
+        String str = "";
+        int n = getContext(req).numRead;
+        for (int i = n - 1; i < messages.size(); i++) {
+            str += "<br>\n" + messages.get(i);
         }
-        return allMessages;
+        return str;
     }
 
-    public static void verifyLoggedIn(spark.Request req){
+    public static void verifyLoggedIn(spark.Request req) {
         Context ctx = getContext(req);
-        if(ctx.initials == null){
-            halt(401, "You have been banned for malicious behaviour.");
+        if (ctx.initials == null) {
+            halt(401, "You have been banned for a week due to malicious behaviour.");
         }
     }
-    
+
     //get a context or make one from a request
-    public static Context getContext(spark.Request req){
+    public static Context getContext(spark.Request req) {
         Context ctx = req.session().attribute("context");
-        if (ctx == null){
+        if (ctx == null) {
             ctx = new Context();
             req.session().attribute("context", ctx);
         }
         return ctx;
     }
-    
+
     public static String factorial(spark.Request req) {
         int test;
         try {
