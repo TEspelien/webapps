@@ -3,10 +3,8 @@ console.log("parsing script416");
 var inputField = document.getElementById("numInput");
 var outputArea = document.getElementById("output");
 
-var x;
 function test() {
-    request(inputField.value)
-    print(x);
+    request(inputField.value);
 }
 
 function stressTest() {
@@ -17,14 +15,14 @@ function stressTest() {
 }
 
 function print(s) {
-    outputArea.value += s + "\n";
+    outputArea.value = s + "\n";
 }
 
 function request(n) {
     var xhr = new XMLHttpRequest();
-    xhr.open("get", "http://localhost:4567/factorial?numbers=" + n, false);
+    xhr.open("get", "http://localhost:4567/factorial?numbers=" + n, true);
     xhr.onload = () => {
-        outputArea.value = "factorial(" + n + ") " + xhr.response;
+        outputArea.value += "\n" + xhr.response;
         console.log("" + xhr.response);
     };
     xhr.onerror = () => {
@@ -32,5 +30,6 @@ function request(n) {
     };
     xhr.send();
 }
+
 
 console.log("done parsing script416")

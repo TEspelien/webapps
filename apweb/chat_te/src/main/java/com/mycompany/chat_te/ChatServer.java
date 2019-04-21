@@ -22,7 +22,7 @@ public class ChatServer {
         get("/factorial", (req, res) -> factorial(req));
         get("/login", (req, res) -> login(req));
         get("/retrieve", (req, res) -> retrieveNewMessages(req));
-        //get("/send", (req, res) -> sendMessage());
+        //get("/send", (req, res) -> postMessageFromRequest(req));
     }
 
     public static String login(spark.Request req) {

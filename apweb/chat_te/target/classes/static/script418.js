@@ -1,3 +1,11 @@
+console.log("started parsing script418.js")
+
+messageInputHandle = document.getElementById(messageInput);
+chatboxHandle = document.getElementById(chatbox);
+function pushMessage(){
+    
+}
+
 function request(obj) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
@@ -16,9 +24,6 @@ function request(obj) {
     });
 };
 
-function factorial(n){
-    xmlrequest("get", "factorial?number="+n);
-}
 
 function xmlrequest(verb, url) {
     var xhr = new XMLHttpRequest();
@@ -32,3 +37,5 @@ function xmlrequest(verb, url) {
 
     xhr.send(obj.body);
 }
+
+console.log("done parsing scrip418.js")
