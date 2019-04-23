@@ -6,6 +6,7 @@
 package com.mycompany.chat_te;
 
 import java.util.ArrayList;
+import javax.servlet.MultipartConfigElement;
 import spark.Request;
 import static spark.Spark.*;
 
@@ -22,7 +23,7 @@ public class ChatServer {
         get("/factorial", (req, res) -> factorial(req));
         get("/login", (req, res) -> login(req));
         get("/retrieve", (req, res) -> retrieveNewMessages(req));
-        //get("/send", (req, res) -> postMessageFromRequest(req));
+        post("/post", (req, res) -> postMessage(req));
     }
 
     public static String login(spark.Request req) {
@@ -33,8 +34,13 @@ public class ChatServer {
 
     public static ArrayList<String> messages = new ArrayList<String>();
 
-    public void postMessageFromRequest(spark.Request req) {
-        messages.add(req.body());
+    public static String postMessage(spark.Request req) {
+        System.out.println("postMessage called in the server successfully");
+        MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
+        req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
+        String str = "post msg: " + req.queryParams("initials") + ": " + req.queryParams("text");
+        System.out.println(str);
+        return str;
     }
 
     public static String retrieveNewMessages(spark.Request req) {
