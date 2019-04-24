@@ -10,9 +10,7 @@ package com.mycompany.chat_te;
  * @author tespelien
  */
 public class Context {
-    
+
     public String initials;
     public int numRead;
-    
-    
 }
