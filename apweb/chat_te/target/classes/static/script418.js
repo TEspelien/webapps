@@ -29,13 +29,13 @@ function postMessage() {
 }
 
 function retrieveMessages() {
-    request({ verb: "GET", url: "retrieveMessages?" })
+    request({ verb: "GET", url: "retrieve?" })
         .then(data => {
             outputToChatbox(data);
             //chatboxHandle.value += data;
         })
         .catch(error => {
-            output("Error: " + error);
+            outputToChatbox("Error: " + error);
         });
 }
 
@@ -62,7 +62,6 @@ function request(obj) {
                 reject(xhr.statusText);
             }
         };
-        console.log("requesting error")
         xhr.onerror = () => reject(xhr.statusText);
 
         xhr.send(obj.body);
