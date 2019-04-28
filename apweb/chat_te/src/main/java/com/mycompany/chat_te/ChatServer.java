@@ -50,18 +50,21 @@ public class ChatServer {
         synchronized (messages) {
             messages.add(str);
         }
+        ctx.numRead++;
         return str;
     }
 
     public static String retrieveNewMessages(spark.Request req) {
         verifyLoggedIn(req);
         String str = "";
-        int n = getContext(req).numRead;
-        System.out.println("numRead is " + n);
-        System.out.println("there are " + messages.size() + " messages present");
-        for (int i = n; i < messages.size() - 1; i++) {
-            str += "\n \n" + messages.get(i);
-            getContext(req).numRead++;
+        synchronized (messages) {
+            int n = getContext(req).numRead;
+            System.out.println("numRead is " + n);
+            System.out.println("there are " + messages.size() + " messages present");
+            for (int i = n; i < messages.size(); i++) {
+                str += "\n \n" + messages.get(i);
+                getContext(req).numRead++;
+            }
         }
         return str;
     }
