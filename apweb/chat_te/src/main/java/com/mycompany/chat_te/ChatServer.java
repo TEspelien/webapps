@@ -45,7 +45,7 @@ public class ChatServer {
         System.out.println("postMessage called in the server successfully");
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
         req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
-        String str = "\n" + ctx.initials + ": " + req.queryParams("text");
+        String str = "\n \n" + ctx.initials + ": " + req.queryParams("text");
         System.out.println(str);
         synchronized (messages) {
             messages.add(str);

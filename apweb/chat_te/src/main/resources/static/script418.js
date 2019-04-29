@@ -43,12 +43,12 @@ function login() {
     var user = loginInputHandle.value;
     request({ verb: "GET", url: "login?initials=" + user })
         .then(data => {
-            outputToChatbox("Login successful");
+            outputToChatbox("\n Login successful");
         })
         .catch(error => {
             output("Login error: " + error);
         });
-    setInterval(retrieveMessages, 1000)
+    setInterval(retrieveMessages, 100)
 }
 
 function request(obj) {
