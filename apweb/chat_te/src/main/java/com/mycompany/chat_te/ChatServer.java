@@ -45,7 +45,7 @@ public class ChatServer {
         System.out.println("postMessage called in the server successfully");
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
         req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
-        String str = ctx.initials + ": " + req.queryParams("text");
+        String str = "\n" + ctx.initials + ": " + req.queryParams("text");
         System.out.println(str);
         synchronized (messages) {
             messages.add(str);
@@ -62,7 +62,7 @@ public class ChatServer {
             System.out.println("numRead is " + n);
             System.out.println("there are " + messages.size() + " messages present");
             for (int i = n; i < messages.size(); i++) {
-                str += "\n \n" + messages.get(i);
+                str += "\n" + messages.get(i);
                 getContext(req).numRead++;
             }
         }

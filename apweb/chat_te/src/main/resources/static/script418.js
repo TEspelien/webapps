@@ -5,7 +5,7 @@ var loginInputHandle = document.getElementById("loginInput");
 var chatboxHandle = document.getElementById("chatbox");
 
 function outputToChatbox(str) {
-    chatboxHandle.value += "\n \n" + str;
+    chatboxHandle.value += str;
 }
 
 function outputToConsole(str) {
@@ -48,6 +48,7 @@ function login() {
         .catch(error => {
             output("Login error: " + error);
         });
+    setInterval(retrieveMessages, 1000)
 }
 
 function request(obj) {
