@@ -31,8 +31,17 @@ function postMessage() {
 function retrieveMessages() {
     request({ verb: "GET", url: "retrieve?" })
         .then(data => {
-            outputToChatbox(data);
-            //chatboxHandle.value += data;
+            let messages = JSON.parse(data);
+            console.log(data);
+            // go through array
+            for (var i = 0; i < messages.length; i++) {
+                let s = messages[i];
+                // add indent
+                if (!s.startsWith(initials)) {
+                    s = "&nbsp;&nbsp;&nbsp;&nbsp;" + s;
+                }
+                outputToChatbox(s + "<br>");
+            }
         })
         .catch(error => {
             outputToChatbox("Error: " + error);

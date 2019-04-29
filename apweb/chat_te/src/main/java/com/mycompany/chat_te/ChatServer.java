@@ -6,6 +6,7 @@
 package com.mycompany.chat_te;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.MultipartConfigElement;
 import spark.Request;
 import static spark.Spark.*;
@@ -26,7 +27,7 @@ public class ChatServer {
         get("/hello", (req, res) -> "hello world");
         get("/factorial", (req, res) -> factorial(req));
         get("/login", (req, res) -> login(req));
-        get("/retrieve", (req, res) -> retrieveNewMessages(req));
+        get("/retrieve", "application/json", (req, res) -> getNewMessages(req), new JSONRT());
         post("/post", (req, res) -> postMessage(req));
     }
 
@@ -67,6 +68,20 @@ public class ChatServer {
             }
         }
         return str;
+    }
+
+    public static Object getNewMessages(spark.Request req) {
+        verifyLoggedIn(req);
+        Context ctx = getContext(req);
+        List<String> myMessages;
+        synchronized (ctx) {
+            synchronized (messages) {
+                myMessages = messages.subList(ctx.numRead, messages.size() - 1);
+                ctx.numRead = messages.size();
+            }
+        }
+        System.out.println("JSON gave back " + (new JSONRT()).render(myMessages));
+        return myMessages;
     }
 
     public static void verifyLoggedIn(spark.Request req) {
