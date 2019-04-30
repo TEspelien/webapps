@@ -22,12 +22,12 @@ public class ChatServer {
         staticFiles.location("static/");
 
         before("*", (req, res) -> {
-            System.out.println("request coming in: " + req.requestMethod() + ":" + req.url());
+            //System.out.println("request coming in: " + req.requestMethod() + ":" + req.url());
         });
         get("/hello", (req, res) -> "hello world");
         get("/factorial", (req, res) -> factorial(req));
         get("/login", (req, res) -> login(req));
-        get("/retrieve", "application/json", (req, res) -> getNewMessages(req), new JSONRT());
+        get("/retrieve", "application/json", (req, res) -> getNewMessages(req, res), new JSONRT());
         post("/post", (req, res) -> postMessage(req));
     }
 
@@ -46,7 +46,7 @@ public class ChatServer {
         System.out.println("postMessage called in the server successfully");
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
         req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
-        String str = "\n \n" + ctx.initials + ": " + req.queryParams("text");
+        String str = ctx.initials + ": " + req.queryParams("text");
         System.out.println(str);
         synchronized (messages) {
             messages.add(str);
@@ -70,14 +70,16 @@ public class ChatServer {
         return str;
     }
 
-    public static Object getNewMessages(spark.Request req) {
+    public static List<String> getNewMessages(spark.Request req, spark.Response res) {
         verifyLoggedIn(req);
         Context ctx = getContext(req);
-        List<String> myMessages;
+        List<String> myMessages = messages;
         synchronized (ctx) {
             synchronized (messages) {
-                myMessages = messages.subList(ctx.numRead, messages.size() - 1);
+                System.out.println("transcribing messages...");
+                myMessages = messages.subList(ctx.numRead, messages.size());
                 ctx.numRead = messages.size();
+                System.out.println(ctx.numRead);
             }
         }
         System.out.println("JSON gave back " + (new JSONRT()).render(myMessages));

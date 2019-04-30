@@ -20,7 +20,7 @@ function postMessage() {
     console.log(data);
     request({ verb: "POST", url: "post?", body: data })
         .then(data => {
-            completeMessage = data;
+            completeMessage = "\n \n" + data;
             outputToChatbox(completeMessage);
         })
         .catch(error => {
@@ -40,7 +40,7 @@ function retrieveMessages() {
                 if (!s.startsWith(initials)) {
                     s = "&nbsp;&nbsp;&nbsp;&nbsp;" + s;
                 }
-                outputToChatbox(s + "<br>");
+                outputToChatbox(s + "\n");
             }
         })
         .catch(error => {
@@ -57,14 +57,14 @@ function login() {
         .catch(error => {
             output("Login error: " + error);
         });
-    setInterval(retrieveMessages, 100)
+    setInterval(retrieveMessages, 3000)
 }
 
 function request(obj) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open(obj.verb || "GET", obj.url);
-        console.log("verb used: " + obj.verb + " | url used: " + obj.url);
+        //console.log("verb used: " + obj.verb + " | url used: " + obj.url);
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(xhr.response);
