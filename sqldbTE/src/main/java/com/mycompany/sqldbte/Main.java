@@ -48,25 +48,27 @@ public class Main {
     //need to test this method to make sure it reads the database correctly
     //read chatserver.java for notes on using JSON
     public static String[][] dumpTableFromInput(spark.Request req, spark.Response res) {
-        System.out.println("1");
+
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
         req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
-        String tableName = req.queryParams("text");
-        System.out.println(tableName);
-        System.out.println("2");
+        String tableName = req.queryParams("tableName");
+
         System.out.println("trying to access " + tableName + ".");
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("select * from " + tableName); // select everything in the table
             ResultSetMetaData rsmd = rs.getMetaData();
-            int numberOfColumns = rsmd.getColumnCount();
-            String[][] tableArr = new String[numberOfColumns][50];
+            int numberOfColumns = Math.min(3, rsmd.getColumnCount());
+            //int numberOfColumns = rsmd.getColumnCount();
+            String[][] tableArr = new String[50][numberOfColumns];
+            System.out.println(tableArr.length + " tracks shown");
             int counter = 0;
+            System.out.println("there are " + numberOfColumns + " columns");
             while (rs.next() && counter < 50) { // prints the id and first two columns of all rows
                 for (int i = 0; i < numberOfColumns; i++) {
-                    tableArr[counter][numberOfColumns] = rs.getString(i);
+                    tableArr[counter][i] = rs.getString(i + 1) +"--";
+                    //System.out.print(rs.getString(i + 1) + " ");//sql indexing starts at 1
                 }
-                System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
                 counter++;
             }
             System.out.println(tableName + ":" + (new JSONRT()).render(tableArr));

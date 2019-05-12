@@ -9,12 +9,12 @@ function dumpTable() {
     var tableName = tableInputHandle.value;
     console.log("trying to dump " + tableName);
 
-    var data = new FormData();
-    data.append("text", tableName);
-    console.log(data.get("text"));
-    request({ verb: "GET", url: "dump?", body: data })
+    request({ verb: "GET", url: "dump?tableName=" + tableName })
         .then(data => {
             let tableData = JSON.parse(data);
+            for (let r of tableData){
+                outputToChatbox(r+"\n");
+            }
             console.log("server responded with " + tableData);
             outputToChatbox(tableData);
         })
