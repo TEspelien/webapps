@@ -10,7 +10,5 @@ package com.mycompany.sqldbTE;
  * @author tespelien
  */
 public class Context {
-
-    public String initials;
-    public int numRead;
+    public String tableName;
 }

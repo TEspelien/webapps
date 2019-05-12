@@ -11,7 +11,7 @@ function dumpTable() {
     var d = new FormData();
     d.append("text", tableName);
     console.log(d);
-    request({ verb: "POST", url: "dump?", body: d })
+    request({ verb: "GET", url: "dump?", body: d })
         .then(data => {
             let tableData = JSON.parse(data);
             outputToChatbox(tableData);
