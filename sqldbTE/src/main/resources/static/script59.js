@@ -3,6 +3,29 @@ console.log("started parsing script59");
 var tableInputHandle = document.getElementById("input");
 var tableOutputHandle = document.getElementById("output");
 
+//need function to read input and request JSON object (table) from server
+//need function to parse this object and output to the text box
+
+function dumpTable() {
+    var tableName = tableInputHandle.value;
+    console.log("trying to dump " + tableName);
+    var data = new FormData();
+    data.append("text", tableName);
+    console.log(data);
+    request({ verb: "GET", url: "dump?", body: data })
+        .then(data => {
+            let tableData = JSON.parse(data);
+            outputToChatbox(tableData);
+        })
+        .catch(error => {
+            console.log("Error: " + error);
+        });
+}
+
+function outputToChatbox(str) {
+    tableOutputHandle.value += str;
+}
+
 function request(obj) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();

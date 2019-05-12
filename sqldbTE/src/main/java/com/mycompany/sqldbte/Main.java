@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) {
         staticFiles.location("static/");
         get("/hello", (req, res) -> "hello world");
-        get("/retrieve", "application/json", (req, res) -> dumpTableFromInput(req, res), new JSONRT());
+        get("/dump", "application/json", (req, res) -> dumpTableFromInput(req, res), new JSONRT());
 
         connect();
     }
@@ -44,17 +44,15 @@ public class Main {
 
     //need to test this method to make sure it reads the database correctly
     //read chatserver.java for notes on using JSON
-    public static String[][] dumpTableFromInput(spark.Request req, spark.Request res) {
-
+    public static String[][] dumpTableFromInput(spark.Request req, spark.Response res) {
+        System.out.println();
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
         req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
         String tableName = req.queryParams("text");
-
+        System.out.println("trying to access " + tableName + ".");
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("select * from " + tableName); // select everything in the table
-            System.out.println(tableName + ":");
-
             ResultSetMetaData rsmd = rs.getMetaData();
             int numberOfColumns = rsmd.getColumnCount();
             String[][] tableArr = new String[numberOfColumns][50];
@@ -66,7 +64,7 @@ public class Main {
                 System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
                 counter++;
             }
-
+            System.out.println(tableName + ":" + (new JSONRT()).render(tableArr));
             return tableArr;
         } catch (Exception e) {
             System.out.println("exception caught: " + e);
