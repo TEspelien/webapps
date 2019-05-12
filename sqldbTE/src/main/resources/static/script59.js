@@ -4,15 +4,14 @@ var tableInputHandle = document.getElementById("input");
 var tableOutputHandle = document.getElementById("output");
 
 //need function to read input and request JSON object (table) from server
-//need function to parse this object and output to the text box
 
 function dumpTable() {
     var tableName = tableInputHandle.value;
     console.log("trying to dump " + tableName);
-    var data = new FormData();
-    data.append("text", tableName);
-    console.log(data);
-    request({ verb: "GET", url: "dump?", body: data })
+    var d = new FormData();
+    d.append("text", tableName);
+    console.log(d);
+    request({ verb: "POST", url: "dump?", body: d })
         .then(data => {
             let tableData = JSON.parse(data);
             outputToChatbox(tableData);

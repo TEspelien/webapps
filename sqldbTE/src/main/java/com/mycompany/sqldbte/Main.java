@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) {
         staticFiles.location("static/");
         get("/hello", (req, res) -> "hello world");
-        get("/dump", "application/json", (req, res) -> dumpTableFromInput(req, res), new JSONRT());
+        post("/dump", "application/json", (req, res) -> dumpTableFromInput(req, res), new JSONRT());
 
         connect();
     }
@@ -45,7 +45,7 @@ public class Main {
     //need to test this method to make sure it reads the database correctly
     //read chatserver.java for notes on using JSON
     public static String[][] dumpTableFromInput(spark.Request req, spark.Response res) {
-        System.out.println();
+        System.out.println(req.body());
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
         req.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
         String tableName = req.queryParams("text");
