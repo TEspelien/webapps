@@ -8,12 +8,14 @@ var tableOutputHandle = document.getElementById("output");
 function dumpTable() {
     var tableName = tableInputHandle.value;
     console.log("trying to dump " + tableName);
-    var d = new FormData();
-    d.append("text", tableName);
-    console.log(d);
-    request({ verb: "GET", url: "dump?", body: d })
+
+    var data = new FormData();
+    data.append("text", tableName);
+    console.log(data.get("text"));
+    request({ verb: "GET", url: "dump?", body: data })
         .then(data => {
             let tableData = JSON.parse(data);
+            console.log("server responded with " + tableData);
             outputToChatbox(tableData);
         })
         .catch(error => {
