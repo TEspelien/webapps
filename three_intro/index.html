@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<body>
+    gimme le text
+    <script src="three.min.js"></script>
+    <script src="three_intro_script.js"></script>
+    <script>
+        var scene, camera, renderer;
+
+        //three.js uses 4 main objects: scene, renderer, camera, and shapes
+        scene = new THREE.Scene(); //scene is what three uses to draw shapes or something like that?
+        scene.background = new THREE.Color(0xFFFFFF);
+        var WIDTH = window.innerWidth,
+            HEIGHT = window.innerHeight;
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });//apparently webgl uses my GPU so its faster
+        //antialising is to make the graphics look smoother
+        renderer.setSize(WIDTH, HEIGHT);
+        document.body.appendChild(renderer.domElement);
+
+        //parameters for camera: field of view, aspect ratio, close range, far range
+        //if an object is further than far range, it will not be rendered
+        camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
+        camera.position.set(120, 600, 120);
+        var center = new THREE.Vector3(0, 0, -300);
+
+        camera.lookAt(center);
+        scene.add(camera);
+        console.log("created scene, renderer, and camera");
+        //when the window is resized, everything has to calculated again using this lambda
+        window.addEventListener('resize', function () {
+            var WIDTH = window.innerWidth,
+                HEIGHT = window.innerHeight;
+            renderer.setSize(WIDTH, HEIGHT);
+            camera.aspect = WIDTH / HEIGHT;
+            camera.updateProjectionMatrix();//for some reason i have to use this to redraw everything?
+        });
+
+        //we need a nice plane
+        var geo = new THREE.PlaneBufferGeometry(2000, 2000, 8, 8);
+        var mat = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.DoubleSide });
+        var plane = new THREE.Mesh(geo, mat);
+        plane.rotateX(- Math.PI / 2);
+        scene.add(plane);
+
+        var boxCenter = new THREE.Vector3(center.x - 200, 0, -300);
+        var box = addBox(20, 40, 60, boxCenter);
+        scene.add(box);
+
+        //we need to add shapes!
+        var sphere = addSphere(20, center);
+
+        //if you dont add it, you dont see it
+        scene.add(sphere);
+
+        //now without a light, you cant see anything!
+        var lightCenter = new THREE.Vector3(10, 50, 130);
+        var pointLight = addLight(lightCenter);
+        scene.add(pointLight);
+
+        function update() {
+            // Draw!  
+            orbitObject(box, 80, center);
+            rotateObject(box, 2);//radians per frame
+            renderer.render(scene, camera);
+
+            // Schedule the next frame.
+            requestAnimationFrame(update);
+        }
+        // Schedule the first frame.
+        requestAnimationFrame(update);
+    </script>
+</body>
