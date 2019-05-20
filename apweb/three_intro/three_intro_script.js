@@ -1,6 +1,4 @@
 console.log("started parsing script");
-var t = 0;
-var rotationSpeed = 4;//second for a full rotation
 clock = new THREE.Clock();
 function addSphere(r, center) {
     console.log("adding sphere...")
@@ -18,10 +16,9 @@ function addSphere(r, center) {
         sphereMaterial);
 
     //i wanna see!
-    var x = center.x;
-    var y = center.y;
-    var z = center.z;
-    sphere.position.z = z;
+    sphere.position.x = center.x;
+    sphere.position.y = center.y;
+    sphere.position.z = center.z;
 
     // Changes to the vertices
     sphere.geometry.verticesNeedUpdate = true;
@@ -32,12 +29,24 @@ function addSphere(r, center) {
     return sphere;
 }
 
-function orbitObject(o, r, center) {
-    t = clock.getElapsedTime();
+function orbitObjectXZ(o, r, center) {
+    var t = 1.4 * clock.getElapsedTime();
     o.position.x = center.x + r * (Math.sin(t));
     o.position.z = center.z + r * (Math.cos(t));
     //console.log(o.position.x);
     //console.log(o.position.z);
+}
+
+function orbitObjectXY(o, r, center) {
+    var t = 1.4 * clock.getElapsedTime();
+    o.position.x = -(center.x + r * (Math.sin(t)));
+    o.position.y = center.y + r * (Math.cos(t));
+}
+
+function orbitObjectYZ(o, r, center) {
+    var t = 1.4 * clock.getElapsedTime();
+    o.position.z = center.z + r * (Math.sin(t));
+    o.position.y = center.y + r * (Math.cos(t));
 }
 
 function rotateObject(o, s) {

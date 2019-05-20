@@ -3,9 +3,9 @@
 <body>
     gimme le text
     <script src="three.min.js"></script>
+    <script src="OrbitControls.js"></script>
     <script src="three_intro_script.js"></script>
     <script>
-
         var scene, camera, renderer;
 
         //three.js uses 4 main objects: scene, renderer, camera, and shapes
@@ -25,7 +25,9 @@
         camera.position.set(120, 600, 120);
         var center = new THREE.Vector3(0, 0, -300);
 
-        camera.lookAt(center);
+        //camera.lookAt(center);
+        var controls = new THREE.OrbitControls(camera);
+        controls.update();
         scene.add(camera);
         console.log("created scene, renderer, and camera");
         //when the window is resized, everything has to calculated again using this lambda
@@ -38,21 +40,28 @@
         });
 
         //we need a nice plane
-        var geo = new THREE.PlaneBufferGeometry(2000, 2000, 8, 8);
-        var mat = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.DoubleSide });
-        var plane = new THREE.Mesh(geo, mat);
-        plane.rotateX(- Math.PI / 2);
-        scene.add(plane);
-
-        var boxCenter = new THREE.Vector3(center.x - 200, 0, -300);
-        var box = addBox(20, 40, 60, boxCenter);
-        scene.add(box);
-
+        var gridHelper = new THREE.GridHelper(2000, 30);
+        scene.add(gridHelper);
         //we need to add shapes!
-        var sphere = addSphere(20, center);
+        var nucleus = addSphere(20, center);
+        nucleus.material.color.setHex(0x009999);
 
+        var center2 = new THREE.Vector3(-56.56, 0, -300 + 56.56);
+        var electron1 = addSphere(20, center2);
+        electron1.material.color.setHex(0xFFA500);
+
+        var center3 = new THREE.Vector3(0, 56.56, -300 + 56.56);
+        var electron3 = addSphere(20, center3);
+        electron3.material.color.setHex(0xFF8C00);
+
+        var center4 = new THREE.Vector3(0, 56.56, -300 + 56.56);
+        var electron4 = addSphere(20, center3);
+        electron4.material.color.setHex(0xFFD700);
         //if you dont add it, you dont see it
-        scene.add(sphere);
+        scene.add(electron1);
+        scene.add(nucleus);
+        scene.add(electron3);
+        scene.add(electron4);
 
         //now without a light, you cant see anything!
         var lightCenter = new THREE.Vector3(10, 50, 130);
@@ -61,10 +70,12 @@
 
         function update() {
             // Draw!  
-            orbitObject(box, 80, center);
-            rotateObject(box, 2);//radians per frame
+            orbitObjectXZ(electron1, 80, center);
+            orbitObjectXY(electron4, 80, center);
+            orbitObjectYZ(electron3, 80, center);
+            // rotateObject(box, 2);//radians per frame
             renderer.render(scene, camera);
-
+            controls.update();
             // Schedule the next frame.
             requestAnimationFrame(update);
         }
