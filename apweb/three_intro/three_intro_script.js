@@ -46,7 +46,7 @@ function orbitObjectXY(o, r, center) {
 function orbitObjectYZ(o, r, center) {
     var t = 1.4 * clock.getElapsedTime();
     o.position.z = center.z + r * (Math.sin(t));
-    o.position.y = center.y + r * (Math.cos(t));
+    o.position.y = -(center.y + r * (Math.cos(t)));
 }
 
 function rotateObject(o, s) {
